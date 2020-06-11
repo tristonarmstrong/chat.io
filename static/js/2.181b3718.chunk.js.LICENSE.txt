@@ -11,25 +11,11 @@ object-assign
  * @license  MIT
  */
 
-/*! exports provided: default */
-
 /*! https://mths.be/utf8js v2.1.2 by @mathias */
-
-/*! no static exports found */
 
 /*! queue-microtask. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
-/*! react */
-
 /*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
-
-/*!******************************!*\
-        !*** ./src/react-webcam.tsx ***!
-        \******************************/
-
-/*!**************************************************************************************!*\
-        !*** external {"root":"React","commonjs2":"react","commonjs":"react","amd":"react"} ***!
-        \**************************************************************************************/
 
 /** @license React v0.19.1
  * scheduler.production.min.js
