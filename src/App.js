@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import Cam from './WebCam'
 import io from 'socket.io-client'
 import Peer from 'simple-peer'
 
@@ -101,7 +100,6 @@ class App extends React.Component {
     return (
       <div className="App">
         <h1>Socket.io Chat App</h1>
-        {/* <Cam method={this.sendStream}/> */}
         <div id='peer-container'>
           <video id='main' muted></video>
         </div>
