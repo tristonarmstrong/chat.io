@@ -11,7 +11,7 @@ class App extends React.Component {
   constructor(props){
     super(props)
     this.client = {}
-    this.socket = io('http://localhost:3000')
+    this.socket = io('https://cum-io.herokuapp.com/')
   }
 
   componentDidMount() {
