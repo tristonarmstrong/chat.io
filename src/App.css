@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  height: 100%;
 }
 
 .App-logo {
@@ -28,23 +29,114 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+.tiny-vid{
+  width: 14rem;
+  border-radius: 10px;
+  background-color: gray;
+}
+.cam-pos{
+  position: absolute;
+    left: 10px;
+    color: red;
+    bottom: 5px;
+    transition: transform .1s ease-in-out;
+}
+.cam-pos:hover{
+  cursor: pointer;
+  transform: scale(1.2);
 }
 
-.peer{
-      position: absolute;
-      bottom: 10px;
-      right: 20px;
-      width: 200px;
-      height: auto;
-      border-radius: 10px;
+
+#app-container{
+  display: flex;
+  justify-content: space-evenly;
+  height: 100%;
 }
-#main{
-  border-radius: 10px;
+
+#user-video-container{
+  width: fit-content;
+  margin: auto;
+  position: relative;
+}
+
+
+
+
+
+#message-sidebar, #peers-video-container{
+  flex: 1;
+  background-color: #e4e4e4;
+}
+
+
+
+
+#message-sidebar{
+  border-radius: 0 10px 10px 0;
+}
+#message-sidebar > #msg-box > form {
+  width: 95%;
+  height: 35px;
+  padding: 6px 0 0 5px;
+  display: flex;
+}
+#msg-box > form > input {
+  flex: 4;
+  border: none;
+  padding-left: 5px;
+}
+#msg-box > form > button {
+  flex: 1;
+  border: none;
+  color: grey;
+}
+
+
+
+
+
+#message-sidebar > #message-container{
+  height: 92%;
+    background-color: #ece9e9;
+    display: flex;
+    flex-flow: column;
+    align-items: baseline;
+    justify-content: flex-end;
+    padding-bottom: 30px;
+}
+#message-sidebar > h3 {
+  font-size: 1.4rem;
+    border-bottom: 1px solid lightgrey;
+    color: #444444;
+}
+
+
+
+
+#peers-video-container{
+  border-radius: 10px 0 0 10px;
+}
+#videos-container{
+  flex: 4;
+}
+
+
+.msg-cont{
+  color: #404040;
+    font-size: 1rem;
+    text-align: left;
+    margin: 5px 10px 0;
+    background-color: #dadada;
+    padding: 0px 2px;
+    border-radius: 0 5px 5px 5px;
+    padding: 5px;
+}
+
+
+
+#title{
+  background: #333333;
+  color: white;
+  padding: 8px 0;
 }
