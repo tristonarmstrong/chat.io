@@ -5,8 +5,6 @@ publish='build/'
 
 command='npm run build'
 
-[context.deploy-preview.environment]
-URL='https://cum-io.herokuapp.com/'
 
 #[[redirects]]
 #from="/*"

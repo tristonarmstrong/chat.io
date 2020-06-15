@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import io from 'socket.io-client'
 import Peer from 'simple-peer'
-let url = process.env.URL
+let url = 'https://cum-io.herokuapp.com/'
 // let url = 'http://localhost:3000'
 
 
