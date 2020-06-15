@@ -12,9 +12,12 @@ class App extends React.Component {
     super(props)
     this.client = {}
     this.socket = io(url)
+    this.video = null
+    this.srcObject = null
     this.state = {
       my_msg: '',
-      messages: []
+      messages: [],
+      NAME: ''
     }
     this.streamConstraints = {
       video: { width: window.innerWidth, height: window.innerHeight },
@@ -22,23 +25,23 @@ class App extends React.Component {
     }
   }
 
-
-
-  componentDidMount() {
+  activateStream() {
     let { client, socket } = this
-    let video = document.querySelector('#main')
+    this.video = document.querySelector('#main')
+    let video = this.video
     navigator.mediaDevices.getUserMedia(this.streamConstraints)
       .then(stream => {
         socket.emit('NewClient')
-        video.srcObject = stream
+        this.srcObject = stream
+        let temp = this.srcObject
+        video.srcObject = this.srcObject
         video.play()
 
 
         // used to initialize a peer
         function InitPeer(type) {
-          let peer = new Peer({ initiator: type === 'init' ? true : false, stream: stream, trickle: false })
+          let peer = new Peer({ initiator: type === 'init' ? true : false, stream: temp, trickle: false })
           peer.on('stream', stream => {
-            console.log('streaming')
             CreateVideo(stream)
           })
           peer.on('close', () => {
@@ -50,14 +53,12 @@ class App extends React.Component {
 
         // for peer of type init
         function MakePeer() {
-          console.log('making peer')
           client.gotAnswer = false
           let peer = InitPeer('init')
-          console.log(peer)
           peer.on('signal', data => {
-            console.log(data)
             if (!client.gotAnswer) socket.emit('Offer', data)
           })
+          // other person
           client.peer = peer
         }
 
@@ -75,12 +76,12 @@ class App extends React.Component {
         }
 
         function CreateVideo(stream) {
-          console.log('create Video')
           let video = document.createElement('video')
           video.id = 'peerVideo'
           video.className = 'tiny-vid'
           video.srcObject = stream
-          document.querySelector('#peers-list-videos').appendChild(video)
+          // document.querySelector('#peers-list-videos').appendChild(video)
+          document.querySelector('#videos-container').appendChild(video)
           video.play()
         }
 
@@ -89,11 +90,10 @@ class App extends React.Component {
         }
 
         const Disconnect = () => {
-          console.log(client)
-          console.log('disconnecting')
           let video = document.querySelector('#peerVideo')
           if (video) {
-            document.querySelector('#peers-list-videos').removeChild(video)
+            // document.querySelector('#peers-list-videos').removeChild(video)
+            document.querySelector('#videos-container').removeChild(video)
           }
         }
 
@@ -104,23 +104,61 @@ class App extends React.Component {
         socket.on('CreatePeer', MakePeer)
         socket.on('Disconnect', Disconnect)
       })
-      .catch(err => document.write(err))
+      .catch(err => console.error(err))
+  }
+
+  async getName(){
+    let name = await window.prompt('Please pic a name', '')
+    if(!name || !name.length) return this.getName()
+    else { this.setState({NAME: name}) }
+  }
+
+  componentDidMount() {
+    this.getName()
+    this.activateStream()
+    // receiving message
+    this.socket.on('message', (message) => this.addMessage(message))
   }
 
   handleMsgChange = (e) => this.setState({ my_msg: e.target.value })
+
   sendMessage = (e) => {
     e.preventDefault()
-    this.setState({ messages: [...this.state.messages, { name: 'Triston', msg: this.state.my_msg }], my_msg: '' })
+    this.socket.emit('message', {id: this.state.NAME, msg: this.state.my_msg})
+    this.addMessage({msg: this.state.my_msg})
+    this.setState({my_msg: ''})
   }
+  addMessage = (msg) => {
+    this.setState({ messages: [...this.state.messages, msg]})
+    this.scrollMessage()
+  }
+  scrollMessage = () => {
+    let c = document.querySelector('#message-container')
+    c.scrollTo(0, c.scrollHeight)
+  }
+
   disableCam = () => {
-    navigator.mediaDevices.getUserMedia(this.streamConstraints)
-    .then(stream => {
-      stream.getVideoTracks().forEach(track => {
-        console.log(track)
-        track.stop()
-      })
-    })
-    .catch(err => console.error(err))
+    if(!this.video.srcObject) {
+      // theres gotta be a better way
+      navigator.mediaDevices.getUserMedia(this.streamConstraints).then(stream => {
+        this.video.srcObject = stream
+        this.srcObject = stream
+        this.video.play()
+      }).catch(err => console.error(err))
+    }
+    else {
+      this.srcObject.getVideoTracks().forEach(x => { this.track = x; x.stop() })
+      this.video.srcObject = null
+    }
+  }
+
+  messageBox = (msg) => {
+    return (
+      <div className={`msg-cont ${msg.id ? '' : 'me'}`}>
+        <h4 className='msg-name'>{msg.id? msg.id + ':' : ''}</h4>
+        <p className='msg-txt'>{msg.msg}</p>
+      </div>
+    )
   }
 
   render() {
@@ -130,13 +168,8 @@ class App extends React.Component {
         <div id='app-container'>
 
           <aside id="message-sidebar">
-            <h3>Messages</h3>
             <div id="message-container">
-              {this.state.messages.map(msg =>
-                <div className="msg-cont">
-                  <h4>{msg.name}</h4>
-                  <p>{msg.msg}</p>
-                </div>)}
+              {this.state.messages.map(msg => this.messageBox(msg))}
             </div>
             <div id="msg-box">
               <form onSubmit={(e) => this.sendMessage(e)}>
@@ -151,15 +184,12 @@ class App extends React.Component {
           </div>
 
           <aside id='peers-video-container'>
-            <h3>Me</h3>
             <div id="user-video-container">
               <video id='main' className="tiny-vid" muted controls={false}></video>
               <span onClick={this.disableCam} class="material-icons cam-pos">
                 videocam
               </span>
             </div>
-            <hr />
-            <h3>Other Bitches</h3>
             <div id="peers-list-videos">
               {/*peer videos will be pasted here*/}
             </div>
