@@ -108,8 +108,8 @@ class App extends React.Component {
   }
 
   async getName(){
-    // let name = await window.prompt('Please pic a name', '')
-    let name = 'Triston'
+    let name = await window.prompt('Please pic a name', '')
+    // let name = 'Triston'
     if(!name || !name.length) return this.getName()
     else { this.setState({NAME: name}) }
   }
