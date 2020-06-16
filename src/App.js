@@ -3,7 +3,7 @@ import './App.css';
 import io from 'socket.io-client'
 import Peer from 'simple-peer'
 // let url = 'http://localhost:3000'
-let url = process.env.URL
+let url = process.env.REACT_APP_API_URL
 
 
 class App extends React.Component {
@@ -121,7 +121,7 @@ class App extends React.Component {
       'Password, you fucking hacker', '')
     if(!pass || !pass.length) return this.getPassword(1,0)
     else {
-      if (pass !== process.env.PASSWORD){
+      if (pass !== process.env.REACT_APP_PASSWORD){
         return this.getPassword(0,1)
       }
       return
