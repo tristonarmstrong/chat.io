@@ -114,14 +114,15 @@ class App extends React.Component {
     else { this.setState({NAME: name}) }
   }
 
-  async getPassword(empty=0, attempt=0){
-    let pass = await window.prompt('Password, you fucking hacker', 
-    empty ? 'You have to actually type something, dipshit!': 
-    attempt ? 'Nice try you dipshit xD' : '')
-    if(!pass || !pass.length) return this.getPassword(empty=1)
+  async getPassword(empty, attempt){
+    let pass = await window.prompt(
+      empty ? 'You have to actually type something, dipshit!' : 
+      attempt ? 'Nice try you dipshit xD' : 
+      'Password, you fucking hacker', '')
+    if(!pass || !pass.length) return this.getPassword(1,0)
     else {
       if (pass !== process.env.PASSWORD){
-        return this.getPassword(attempt=1)
+        return this.getPassword(0,1)
       }
       return
     }
