@@ -5,6 +5,14 @@ import Peer from 'simple-peer'
 // let url = 'http://localhost:3000'
 let url = process.env.REACT_APP_API_URL
 
+/*
+
+ITS FUCKING SPAGHETTI CODE, I KNOW, LEAVE ME THE HELL
+ALONE YOU GOD DAMN SIMPLETONS 
+
+*/
+
+
 
 class App extends React.Component {
 
