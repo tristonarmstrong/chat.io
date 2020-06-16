@@ -2,8 +2,8 @@ import React from 'react';
 import './App.css';
 import io from 'socket.io-client'
 import Peer from 'simple-peer'
-let url = 'https://cum-io.herokuapp.com/'
 // let url = 'http://localhost:3000'
+let url = process.env.URL
 
 
 class App extends React.Component {
@@ -108,12 +108,27 @@ class App extends React.Component {
   }
 
   async getName(){
-    let name = await window.prompt('Please pic a name', '')
+    // let name = await window.prompt('Please pic a name', '')
+    let name = 'Triston'
     if(!name || !name.length) return this.getName()
     else { this.setState({NAME: name}) }
   }
 
+  async getPassword(empty=0, attempt=0){
+    let pass = await window.prompt('Password, you fucking hacker', 
+    empty ? 'You have to actually type something, dipshit!': 
+    attempt ? 'Nice try you dipshit xD' : '')
+    if(!pass || !name.length) return this.getPassword(empty=1)
+    else {
+      if (pass !== process.env.PASSWORD){
+        return this.getPassword(attempt=1)
+      }
+      return
+    }
+  }
+
   componentDidMount() {
+    this.getPassword()
     this.getName()
     this.activateStream()
     // receiving message

@@ -5,6 +5,8 @@ publish='build/'
 
 command='npm run build'
 
+[context.production]
+  environment = { PASSWORD = "tristonisaboss", URL = "https://cum-io.herokuapp.com/"}
 
 #[[redirects]]
 #from="/*"
