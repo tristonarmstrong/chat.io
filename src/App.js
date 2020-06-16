@@ -118,7 +118,7 @@ class App extends React.Component {
     let pass = await window.prompt('Password, you fucking hacker', 
     empty ? 'You have to actually type something, dipshit!': 
     attempt ? 'Nice try you dipshit xD' : '')
-    if(!pass || !name.length) return this.getPassword(empty=1)
+    if(!pass || !pass.length) return this.getPassword(empty=1)
     else {
       if (pass !== process.env.PASSWORD){
         return this.getPassword(attempt=1)
