@@ -2,8 +2,9 @@ import React from 'react';
 import './App.css';
 import io from 'socket.io-client'
 import Peer from 'simple-peer'
-// let url = 'http://localhost:3000'
-let url = process.env.REACT_APP_API_URL
+import axios from 'axios'
+let url = 'http://localhost:5000'
+// let url = process.env.REACT_APP_API_URL
 
 /*
 
@@ -19,8 +20,9 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.client = {}
-    this.socket = io(url)
     this.video = null
+    this.socket = io(`${url}${window.location.pathname}`)
+
     this.srcObject = null
     this.state = {
       my_msg: '',
@@ -137,7 +139,10 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.getPassword()
+    axios.get(`${url}${window.location.pathname}`)
+    .then(res => {})
+    .catch(err => console.error(err))
+    // this.getPassword()
     this.getName()
     this.activateStream()
     // receiving message
@@ -210,7 +215,7 @@ class App extends React.Component {
           <aside id='peers-video-container'>
             <div id="user-video-container">
               <video id='main' className="tiny-vid" muted controls={false}></video>
-              <span onClick={this.disableCam} class="material-icons cam-pos">
+              <span onClick={this.disableCam} className="material-icons cam-pos">
                 videocam
               </span>
             </div>
