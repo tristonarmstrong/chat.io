@@ -3,8 +3,8 @@ import './App.css';
 import io from 'socket.io-client'
 import Peer from 'simple-peer'
 import axios from 'axios'
-let url = 'http://localhost:5000'
-// let url = process.env.REACT_APP_API_URL
+// let url = 'http://localhost:5000'
+let url = process.env.REACT_APP_API_URL
 
 /*
 
