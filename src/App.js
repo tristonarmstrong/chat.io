@@ -3,8 +3,8 @@ import './App.css';
 import io from 'socket.io-client'
 import Peer from 'simple-peer'
 import axios from 'axios'
-// let url = 'http://localhost:5000'
-let url = process.env.REACT_APP_API_URL
+let url = 'http://localhost:5000'
+// let url = process.env.REACT_APP_API_URL
 
 /*
 
@@ -118,8 +118,8 @@ class App extends React.Component {
   }
 
   async getName(){
-    let name = await window.prompt('Please pic a name', '')
-    // let name = 'Triston'
+    // let name = await window.prompt('Please pic a name', '')
+    let name = 'Triston'
     if(!name || !name.length) return this.getName()
     else { this.setState({NAME: name}) }
   }
