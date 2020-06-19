@@ -2,39 +2,56 @@ import React from 'react';
 import './App.css';
 import io from 'socket.io-client'
 import Peer from 'simple-peer'
-let url = 'https://cum-io.herokuapp.com/'
-// let url = 'http://localhost:3000'
+import axios from 'axios'
+// let url = 'http://localhost:5000'
+let url = process.env.REACT_APP_API_URL
+
+/*
+
+ITS FUCKING SPAGHETTI CODE, I KNOW, LEAVE ME THE HELL
+ALONE YOU GOD DAMN SIMPLETONS 
+
+*/
+
 
 
 class App extends React.Component {
 
-  constructor(props){
+  constructor(props) {
     super(props)
     this.client = {}
-    this.socket = io(url)
-    this.state = {users: 0}
+    this.video = null
+    this.socket = io(`${url}${window.location.pathname}`)
+
+    this.srcObject = null
+    this.state = {
+      my_msg: '',
+      messages: [],
+      NAME: ''
+    }
     this.streamConstraints = {
-      video: { width: window.innerWidth, height: window.innerHeight},
+      video: { width: window.innerWidth, height: window.innerHeight },
       audio: true
     }
   }
-  
-  
 
-  componentDidMount() {
-    let {client, socket} = this
-    let video = document.querySelector('#main')
+  activateStream() {
+    let { client, socket } = this
+    this.video = document.querySelector('#main')
+    let video = this.video
     navigator.mediaDevices.getUserMedia(this.streamConstraints)
       .then(stream => {
         socket.emit('NewClient')
-        video.srcObject = stream
+        this.srcObject = stream
+        let temp = this.srcObject
+        video.srcObject = this.srcObject
         video.play()
+
 
         // used to initialize a peer
         function InitPeer(type) {
-          let peer = new Peer({ initiator: type === 'init' ? true : false, stream: stream, trickle: false })
+          let peer = new Peer({ initiator: type === 'init' ? true : false, stream: temp, trickle: false })
           peer.on('stream', stream => {
-            console.log('streaming')
             CreateVideo(stream)
           })
           peer.on('close', () => {
@@ -46,14 +63,12 @@ class App extends React.Component {
 
         // for peer of type init
         function MakePeer() {
-          console.log('making peer')
           client.gotAnswer = false
           let peer = InitPeer('init')
-          console.log(peer)
           peer.on('signal', data => {
-            console.log(data)
             if (!client.gotAnswer) socket.emit('Offer', data)
           })
+          // other person
           client.peer = peer
         }
 
@@ -71,12 +86,12 @@ class App extends React.Component {
         }
 
         function CreateVideo(stream) {
-          console.log('create Video')
           let video = document.createElement('video')
           video.id = 'peerVideo'
-          video.className = 'peer'
+          video.className = 'tiny-vid'
           video.srcObject = stream
-          document.querySelector('#peer-container').appendChild(video)
+          // document.querySelector('#peers-list-videos').appendChild(video)
+          document.querySelector('#videos-container').appendChild(video)
           video.play()
         }
 
@@ -85,10 +100,11 @@ class App extends React.Component {
         }
 
         const Disconnect = () => {
-          console.log(client)
-          console.log('disconnecting')
           let video = document.querySelector('#peerVideo')
-          if(video) document.querySelector('#peer-container').removeChild(video)
+          if (video) {
+            // document.querySelector('#peers-list-videos').removeChild(video)
+            document.querySelector('#videos-container').removeChild(video)
+          }
         }
 
 
@@ -98,20 +114,116 @@ class App extends React.Component {
         socket.on('CreatePeer', MakePeer)
         socket.on('Disconnect', Disconnect)
       })
-      .catch(err => document.write(err))
+      .catch(err => console.error(err))
   }
 
-  sendStream = (stream) => {
-    this.socket.emit('stream', stream)
+  async getName(){
+    let name = await window.prompt('Please pic a name', '')
+    // let name = 'Triston'
+    if(!name || !name.length) return this.getName()
+    else { this.setState({NAME: name}) }
   }
 
-  render(){
+  async getPassword(empty, attempt){
+    let pass = await window.prompt(
+      empty ? 'You have to actually type something, dipshit!' : 
+      attempt ? 'Nice try you dipshit xD' : 
+      'Password, you fucking hacker', '')
+    if(!pass || !pass.length) return this.getPassword(1,0)
+    else {
+      if (pass !== process.env.REACT_APP_PASSWORD){
+        return this.getPassword(0,1)
+      }
+      return
+    }
+  }
+
+  componentDidMount() {
+    axios.get(`${url}${window.location.pathname}`)
+    .then(res => {})
+    .catch(err => console.error(err))
+    // this.getPassword()
+    this.getName()
+    this.activateStream()
+    // receiving message
+    this.socket.on('message', (message) => this.addMessage(message))
+  }
+
+  handleMsgChange = (e) => this.setState({ my_msg: e.target.value })
+
+  sendMessage = (e) => {
+    e.preventDefault()
+    this.socket.emit('message', {id: this.state.NAME, msg: this.state.my_msg})
+    this.addMessage({msg: this.state.my_msg})
+    this.setState({my_msg: ''})
+  }
+  addMessage = (msg) => {
+    this.setState({ messages: [...this.state.messages, msg]})
+    this.scrollMessage()
+  }
+  scrollMessage = () => {
+    let c = document.querySelector('#message-container')
+    c.scrollTo(0, c.scrollHeight)
+  }
+
+  disableCam = () => {
+    if(!this.video.srcObject) {
+      // theres gotta be a better way
+      navigator.mediaDevices.getUserMedia(this.streamConstraints).then(stream => {
+        this.video.srcObject = stream
+        this.srcObject = stream
+        this.video.play()
+      }).catch(err => console.error(err))
+    }
+    else {
+      this.srcObject.getVideoTracks().forEach(x => { this.track = x; x.stop() })
+      this.video.srcObject = null
+    }
+  }
+
+  messageBox = (msg) => {
+    return (
+      <div className={`msg-cont ${msg.id ? '' : 'me'}`}>
+        <h4 className='msg-name'>{msg.id? msg.id + ':' : ''}</h4>
+        <p className='msg-txt'>{msg.msg}</p>
+      </div>
+    )
+  }
+
+  render() {
     return (
       <div className="App">
-        <h1>Socket.io Chat App</h1>
-        <p>Users active: {this.state.users}</p>
-        <div id='peer-container'>
-          <video id='main' muted></video>
+        <h1 id="title">Socket.io Chat App</h1>
+        <div id='app-container'>
+
+          <aside id="message-sidebar">
+            <div id="message-container">
+              {this.state.messages.map(msg => this.messageBox(msg))}
+            </div>
+            <div id="msg-box">
+              <form onSubmit={(e) => this.sendMessage(e)}>
+                <input placeholder="chat here..." value={this.state.my_msg} onChange={(e) => this.handleMsgChange(e)} />
+                <button>Send</button>
+              </form>
+            </div>
+          </aside>
+
+          <div id='videos-container'>
+            {/* Focused video goes here */}
+          </div>
+
+          <aside id='peers-video-container'>
+            <div id="user-video-container">
+              <video id='main' className="tiny-vid" muted controls={false}></video>
+              <span onClick={this.disableCam} className="material-icons cam-pos">
+                videocam
+              </span>
+            </div>
+            <div id="peers-list-videos">
+              {/*peer videos will be pasted here*/}
+            </div>
+          </aside>
+
         </div>
       </div>
     );
