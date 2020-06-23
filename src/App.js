@@ -11,154 +11,195 @@ let url = process.env.REACT_APP_API_URL
 ITS FUCKING SPAGHETTI CODE, I KNOW, LEAVE ME THE HELL
 ALONE YOU GOD DAMN SIMPLETONS 
 
+kidding I<3U
+
 */
 
 
 
-class App extends React.Component {
+class App extends React.PureComponent {
 
   constructor(props) {
     super(props)
-    this.client = {}
     this.video = null
-    this.socket = io(`${url}${window.location.pathname}`)
-
     this.srcObject = null
+    this.peers = { /* index, answer, peer_obj */ }
     this.state = {
       my_msg: '',
       messages: [],
       NAME: ''
     }
     this.streamConstraints = {
-      video: { width: window.innerWidth, height: window.innerHeight },
+      video: { width: 854, height: 480 },
       audio: true
     }
   }
 
+  componentDidMount() {
+    // initialize socket
+    this.socket = io(`${url}${window.location.pathname}`, { transports: ['websocket'], upgrade: false }).once('connect')
+    // create room on server from pathname
+    axios.get(`${url}${window.location.pathname}`)
+      .then(res => res).catch(err => console.error(err))
+    // user input for name
+    this.getName()
+    // start stream
+    this.activateStream()
+    // receiving messages
+    this.socket.on('message', (message) => this.addMessage(message))
+  }
+
+
   activateStream() {
-    let { client, socket } = this
-    this.video = document.querySelector('#main')
-    let video = this.video
-    navigator.mediaDevices.getUserMedia(this.streamConstraints)
+    let { socket, video, streamConstraints, srcObject, peers } = this
+    video = document.querySelector('#main')
+    this.video = video
+
+    // ======= GETTING CAM STREAM START HERE =========
+    navigator.mediaDevices.getUserMedia(streamConstraints)
       .then(stream => {
-        socket.emit('NewClient')
+        socket.emit('NewClient') // tell the others on the server that youre a new client
+        srcObject = stream // store this for later cam toggle
         this.srcObject = stream
-        let temp = this.srcObject
-        video.srcObject = this.srcObject
-        video.play()
+        let temp = srcObject // store this for use in peers
+        video.srcObject = srcObject // set new video elem's srcObject to cam stream
+        video.play() // play stream
 
 
-        // used to initialize a peer
-        function InitPeer(type) {
+        // used to create a peer
+        const InitPeer = (type, id) => {
+          console.log('%ccreating peer of type: ', 'color:orange', type, ' : ', id)
           let peer = new Peer({ initiator: type === 'init' ? true : false, stream: temp, trickle: false })
-          peer.on('stream', stream => {
-            CreateVideo(stream)
-          })
-          peer.on('close', () => {
-            document.getElementById('peerVideo').remove()
-            peer.destroy()
-          })
+          peers[id] = { id, peer, gotAnswer: false }
+          // ---- peer events ----
+          peer.on('stream', stream => { CreateVideo(stream, id) })
+          peer.on('error', err => console.error('Custom error response -> ', { code: err.code, error: err }))
+          peer.on('close', () => { peer.destroy() })
+          // -- completed --
+          console.log('peer has been created')
           return peer
         }
 
         // for peer of type init
-        function MakePeer() {
-          client.gotAnswer = false
-          let peer = InitPeer('init')
+        const MakePeer = (socket_id, client_id) => {
+          console.log('%cOk i am making a peer for: ', 'color:green', client_id)
+          // -- create a peer --
+          let peer = InitPeer('init', client_id)
+          // -- send peer signal data (offer)
           peer.on('signal', data => {
-            if (!client.gotAnswer) socket.emit('Offer', data)
+            if (!peers[client_id].gotAnswer) socket.emit('Offer', data, socket_id)
           })
-          // other person
-          client.peer = peer
         }
 
         // for peer of type not init
-        function FrontAnswer(offer) {
-          let peer = InitPeer('notInit')
-          peer.on('signal', data => socket.emit('Answer', data))
+        const FrontAnswer = (offer, socket_id, client_id) => {
+          console.log('%cHey I got the offer!', 'color:cyan')
+          // -- create peer for this client --
+          let peer = InitPeer('notInit', client_id)
+          console.log('Sending answer')
+          // -- send peer data answer --
+          peer.on('signal', data => socket.emit('Answer', data, socket_id))
+          console.log('connecting peer data')
+          // -- set incoming peer offer to this peers signal for connection --
           peer.signal(offer)
         }
 
-        const SignalAnswer = (answer) => {
-          client.gotAnswer = true
-          let peer = client.peer
-          peer.signal(answer)
+        const SignalAnswer = (answer, client_id) => {
+          if (answer.renegotiate) {
+            // -- display this message on renegotiatev --
+            console.log('%cSorry we have to renegotiate', 'color:red', ' -> Trying again')
+          } else {
+            // -- successfully received an answer --
+            peers[client_id].gotAnswer = true // set answer for this peer
+            let peer = peers[client_id].peer
+            // -- set incoming peer offer to this peers signal for connection --
+            peer.signal(answer)
+            console.log('%cI got your answer, ', 'color:cyan', client_id, ' : ', answer)
+          }
         }
 
-        function CreateVideo(stream) {
+        const CreateVideo = (stream, peer_id) => {
+          if (document.querySelector(`#peerVideo-${peer_id}`)) {
+            // -- break from this method if the video already exists -- 
+            return
+          }
+          // -- create a video elem and assign stream to src -- 
           let video = document.createElement('video')
-          video.id = 'peerVideo'
+          video.id = `peerVideo-${peer_id}`
           video.className = 'tiny-vid'
+          video.onclick = (e) => this.makeFocused(e)
           video.srcObject = stream
+          let focused_container = document.querySelector('#focused-video-container')
+          let focused_video = focused_container.children[0]
+          if(focused_video){
+            focused_container.replaceChild(video, focused_video)
+            if(focused_video.id === 'main'){
+              document.querySelector('#user-video-container').prepend(focused_video)
+            }
+            else{
+              document.querySelector('#peers-list-videos').appendChild(focused_video)
+            }
+          }
           // document.querySelector('#peers-list-videos').appendChild(video)
-          document.querySelector('#videos-container').appendChild(video)
           video.play()
         }
 
-        function SessionActive() {
-          document.write('Session Active. Please come back later')
-        }
-
-        const Disconnect = () => {
-          let video = document.querySelector('#peerVideo')
+        const Disconnect = (client_id) => {
+          // -- remove the peers video elem from dom when they leave --
+          let video = document.querySelector(`#peerVideo-${client_id}`)
           if (video) {
-            // document.querySelector('#peers-list-videos').removeChild(video)
-            document.querySelector('#videos-container').removeChild(video)
+            video.parentElement.removeChild(video)
           }
         }
 
 
-        socket.on('BackendOffer', FrontAnswer)
-        socket.on('BackendAnswer', SignalAnswer)
-        socket.on('SessionActive', SessionActive)
-        socket.on('CreatePeer', MakePeer)
+        socket.on('CreatePeer', MakePeer) // i send
+        socket.on('BackendOffer', FrontAnswer) // they send
+        socket.on('BackendAnswer', SignalAnswer) // i send
         socket.on('Disconnect', Disconnect)
       })
       .catch(err => console.error(err))
+
+    // ========== END CAM STREAM HERE =============
   }
 
-  async getName(){
+
+
+  //====================================================
+  //====================================================
+  //====================================================
+  //====================================================
+  //====================================================
+
+
+
+
+  // ========== USER PROMPT METHODS ==============
+
+  async getName() {
+    // -- prompt user for name for state storage --
     let name = await window.prompt('Please pic a name', '')
-    // let name = 'Triston'
-    if(!name || !name.length) return this.getName()
-    else { this.setState({NAME: name}) }
+    if (!name || !name.length) return this.getName()
+    else { this.setState({ NAME: name }) }
   }
 
-  async getPassword(empty, attempt){
-    let pass = await window.prompt(
-      empty ? 'You have to actually type something, dipshit!' : 
-      attempt ? 'Nice try you dipshit xD' : 
-      'Password, you fucking hacker', '')
-    if(!pass || !pass.length) return this.getPassword(1,0)
-    else {
-      if (pass !== process.env.REACT_APP_PASSWORD){
-        return this.getPassword(0,1)
-      }
-      return
-    }
-  }
 
-  componentDidMount() {
-    axios.get(`${url}${window.location.pathname}`)
-    .then(res => {})
-    .catch(err => console.error(err))
-    // this.getPassword()
-    this.getName()
-    this.activateStream()
-    // receiving message
-    this.socket.on('message', (message) => this.addMessage(message))
-  }
+  // ========= MESSAGES METHODS =============
 
-  handleMsgChange = (e) => this.setState({ my_msg: e.target.value })
+  handleMsgChange = (e) => this.setState({ my_msg: e.target.value }) // -- updates messages --
 
   sendMessage = (e) => {
+    // -- emit a socket event and send my name with my message
     e.preventDefault()
-    this.socket.emit('message', {id: this.state.NAME, msg: this.state.my_msg})
-    this.addMessage({msg: this.state.my_msg})
-    this.setState({my_msg: ''})
+    this.socket.emit('message', { id: this.state.NAME, msg: this.state.my_msg })
+    // -- add my message to message list without my name --
+    this.addMessage({ msg: this.state.my_msg })
+    // -- reset my message --
+    this.setState({ my_msg: '' })
   }
+
   addMessage = (msg) => {
-    this.setState({ messages: [...this.state.messages, msg]})
+    this.setState({ messages: [...this.state.messages, msg] })
     this.scrollMessage()
   }
   scrollMessage = () => {
@@ -166,8 +207,23 @@ class App extends React.Component {
     c.scrollTo(0, c.scrollHeight)
   }
 
+  messageBox = (msg, i) => {
+    return (
+      <div key={i} className={`msg-cont ${msg.id ? '' : 'me'}`}>
+        <h4 className='msg-name'>{msg.id ? msg.id + ':' : ''}</h4>
+        <p className='msg-txt'>{msg.msg}</p>
+      </div>
+    )
+  }
+
+
+
+
+  // ========== CAM METHOD ============
+
+
   disableCam = () => {
-    if(!this.video.srcObject) {
+    if (!this.video.srcObject) {
       // theres gotta be a better way
       navigator.mediaDevices.getUserMedia(this.streamConstraints).then(stream => {
         this.video.srcObject = stream
@@ -181,14 +237,20 @@ class App extends React.Component {
     }
   }
 
-  messageBox = (msg) => {
-    return (
-      <div className={`msg-cont ${msg.id ? '' : 'me'}`}>
-        <h4 className='msg-name'>{msg.id? msg.id + ':' : ''}</h4>
-        <p className='msg-txt'>{msg.msg}</p>
-      </div>
-    )
+  makeFocused = (e) => {
+    let video = e.target
+    let focused_container = document.querySelector('#focused-video-container')
+    let peers_container = document.querySelector('#peers-list-videos')
+    let focused_video = focused_container.children[0]
+    console.log(focused_video)
+    if(focused_video){
+      focused_container.replaceChild(video, focused_video)
+      peers_container.appendChild(focused_video)
+    }else{
+      focused_container.appendChild(video)
+    }
   }
+
 
   render() {
     return (
@@ -198,7 +260,7 @@ class App extends React.Component {
 
           <aside id="message-sidebar">
             <div id="message-container">
-              {this.state.messages.map(msg => this.messageBox(msg))}
+              {this.state.messages.map((msg, i) => this.messageBox(msg, i))}
             </div>
             <div id="msg-box">
               <form onSubmit={(e) => this.sendMessage(e)}>
@@ -208,13 +270,14 @@ class App extends React.Component {
             </div>
           </aside>
 
-          <div id='videos-container'>
+          <div id='focused-video-container'>
             {/* Focused video goes here */}
+            <video id='main' className="tiny-vid" muted controls={false}></video>
           </div>
 
           <aside id='peers-video-container'>
             <div id="user-video-container">
-              <video id='main' className="tiny-vid" muted controls={false}></video>
+              {/* main video will be pasted here */}
               <span onClick={this.disableCam} className="material-icons cam-pos">
                 videocam
               </span>
