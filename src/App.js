@@ -30,7 +30,7 @@ class App extends React.PureComponent {
       NAME: ''
     }
     this.streamConstraints = {
-      video: { width: 200, height: 130 },
+      video: { width: 854, height: 480 },
       audio: true
     }
   }
@@ -53,12 +53,14 @@ class App extends React.PureComponent {
   activateStream() {
     let { socket, video, streamConstraints, srcObject, peers } = this
     video = document.querySelector('#main')
+    this.video = video
 
     // ======= GETTING CAM STREAM START HERE =========
     navigator.mediaDevices.getUserMedia(streamConstraints)
       .then(stream => {
         socket.emit('NewClient') // tell the others on the server that youre a new client
         srcObject = stream // store this for later cam toggle
+        this.srcObject = stream
         let temp = srcObject // store this for use in peers
         video.srcObject = srcObject // set new video elem's srcObject to cam stream
         video.play() // play stream
@@ -127,7 +129,18 @@ class App extends React.PureComponent {
           video.className = 'tiny-vid'
           video.onclick = (e) => this.makeFocused(e)
           video.srcObject = stream
-          document.querySelector('#peers-list-videos').appendChild(video)
+          let focused_container = document.querySelector('#focused-video-container')
+          let focused_video = focused_container.children[0]
+          if(focused_video){
+            focused_container.replaceChild(video, focused_video)
+            if(focused_video.id === 'main'){
+              document.querySelector('#user-video-container').prepend(focused_video)
+            }
+            else{
+              document.querySelector('#peers-list-videos').appendChild(focused_video)
+            }
+          }
+          // document.querySelector('#peers-list-videos').appendChild(video)
           video.play()
         }
 
@@ -135,7 +148,7 @@ class App extends React.PureComponent {
           // -- remove the peers video elem from dom when they leave --
           let video = document.querySelector(`#peerVideo-${client_id}`)
           if (video) {
-            document.querySelector('#peers-list-videos').removeChild(video)
+            video.parentElement.removeChild(video)
           }
         }
 
@@ -227,9 +240,12 @@ class App extends React.PureComponent {
   makeFocused = (e) => {
     let video = e.target
     let focused_container = document.querySelector('#focused-video-container')
+    let peers_container = document.querySelector('#peers-list-videos')
     let focused_video = focused_container.children[0]
+    console.log(focused_video)
     if(focused_video){
       focused_container.replaceChild(video, focused_video)
+      peers_container.appendChild(focused_video)
     }else{
       focused_container.appendChild(video)
     }
@@ -256,11 +272,12 @@ class App extends React.PureComponent {
 
           <div id='focused-video-container'>
             {/* Focused video goes here */}
+            <video id='main' className="tiny-vid" muted controls={false}></video>
           </div>
 
           <aside id='peers-video-container'>
             <div id="user-video-container">
-              <video id='main' className="tiny-vid" muted controls={false}></video>
+              {/* main video will be pasted here */}
               <span onClick={this.disableCam} className="material-icons cam-pos">
                 videocam
               </span>
