@@ -4,7 +4,7 @@ import {withRouter} from 'react-router-dom'
 import {Route, Link} from 'react-router-dom'
 import Landing from './landing.js'
 import Room from './room';
-let url = 'http://localhost:5000'
+import cryptoRandomString from 'crypto-random-string'
 
 
 
@@ -19,15 +19,20 @@ class App extends React.PureComponent {
   }
 
   goClick=(name)=>{
-        this.props.history.push(`/${name}`)
-        this.setState({path: `/${name}`})
-}
+    this.props.history.push(`/${name}`)
+    this.setState({path: `/${name}`})
+  }
+  randomClick=()=>{
+    let path = cryptoRandomString({length: 10, type: 'url-safe'})
+    this.props.history.push(`/${path}`)
+    this.setState({path: `/${path}`})
+  }
 
   render() {
     return (
       <div className="App">
         <h1 id="title">Triston's Chat App</h1>
-        <Route exact path='/' render={(props) => <Landing {...props} goClick={this.goClick} />}/>
+        <Route exact path='/' render={(props) => <Landing {...props} goClick={this.goClick} randomClick={this.randomClick}/>}/>
         {Boolean(this.state.path.length) && <Route path={`${this.state.path}`} component={Room}/> }
       </div>
     );

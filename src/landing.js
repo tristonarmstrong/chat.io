@@ -19,6 +19,10 @@ class Landing extends React.Component{
             this.props.goClick(this.state.name)
         }
     }
+    rando=(e)=>{
+        e.preventDefault()
+        this.props.randomClick()
+    }
     render(){
         return(
             <div id='modal'>
@@ -39,7 +43,7 @@ class Landing extends React.Component{
 
                         <div className="buttons-list">
                             <button onClick={(e) => this.go(e)}>GO!</button>
-                            <button onClick={(e) => this.randomClick(e)}>Random</button>
+                            <button onClick={(e) => this.rando(e)}>Random</button>
                         </div>
                     </form>
                 </div>
