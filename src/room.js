@@ -260,6 +260,15 @@ class Room extends React.PureComponent {
           <div id='focused-video-container'>
             {/* Focused video goes here */}
             <video id='main' className="tiny-vid" muted controls={false}></video>
+            <msg>
+              <div onClick={e=> e.target.parentElement.parentElement.removeChild(e.target.parentElement)} className='close'>x</div>
+              <h4>DEVELOPER UPDATE!</h4>
+              <p>I am pushing updates regularly.</p>
+              <p>If the app is broken, please come back at a later time as I will 
+                be working diligently to get things back up and running!
+              </p>
+              <p>Thank you - Triston</p>
+            </msg>
           </div>
 
           <aside id='peers-video-container'>
