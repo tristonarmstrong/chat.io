@@ -96,35 +96,34 @@ input:focus{
     flex-flow: column;
 }
 #message-sidebar > #msg-box > form {
-  width: 95%;
     height: 35px;
     display: flex;
     margin: auto;
-    box-shadow: 1px 7px 8px 0 #0000004a;
 }
-#msg-box{
-  padding: 6px 4px;
-}
+
 #msg-box > form > input {
   flex: 4 1;
     padding-left: 5px;
-    border: 1px solid #00000021;
-    border-radius: 4px 0 0 4px;
+    border: 1px solid rgba(0,0,0,.13);
+    border-radius: 0 0 0 10px;
+    background: #262f3c;
+    color: white;
 }
 #msg-box > form > button {
   flex: 1 1;
-  border: none;
-  color: #313131;
-  background-color: #9cdfff;
-  font-size: .8rem;
-  padding: 10px;
-  transition: background .2s ease-in-out;
-  border-radius: 0 4px 4px 0;
+    border: none;
+    color: #313131;
+    background-color: #b790f4;
+    font-size: .8rem;
+    padding: 10px;
+    transition: background .2s ease-in-out;
+    border-radius: 0 0 10px 0;
 }
 #msg-box > form > button:hover{
-  background-color: #87c2dd;
+  background-color: #a280d8;
   cursor: pointer;
 }
+
 .msg-name{
   font-size: 0.8rem;
 }
@@ -147,6 +146,8 @@ input:focus{
   scroll-behavior: smooth;
   padding-left: 10px;
   padding-right: 5px;
+  background-color: #273143;
+  border-radius: 10px 10px 0 0;
 }
 #message-container > :first-child {
   margin-top: auto;
@@ -164,22 +165,29 @@ input:focus{
 }
 
 
+@keyframes msgBubble {
+  0% {transform: scale(0);}
+  50% {transform: scale(1.2);}
+  100% {transform: scale(1);}
+}
 .msg-cont{
-  color: #404040;
-    font-size: 1rem;
-    text-align: left;
-    margin: 5px 0 0 0;
-    margin-right: auto;
-    background-color: #9bff88;
-    padding: 0px 2px;
-    border-radius: 0 5px 5px 5px;
-    padding: 5px;
-    box-shadow: 2px 2px 5px 0px #00000026;
+  color: #242424;
+  font-size: 1rem;
+  text-align: left;
+  margin: 5px 0 0 0;
+  margin-right: auto;
+  background-color: #e890f4;
+  padding: 0px 2px;
+  border-radius: 0 5px 5px 5px;
+  padding: 5px;
+  box-shadow: 2px 2px 5px 0px #00000026;
+  animation-name: msgBubble;
+  animation-duration: .5s;
 }
 .me {
   text-align: right;
   border-radius: 5px 0 5px 5px;
-  background-color: #64b7ff;
+  background-color: #90a5f4;
   margin-left: auto;
   margin-right: 0;
 }

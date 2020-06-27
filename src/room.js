@@ -124,7 +124,13 @@ class Room extends React.PureComponent {
           if(focused_video){
             focused_container.replaceChild(video, focused_video)
             if(focused_video.id === 'main'){
+              let icon = document.createElement('span')
+              icon.onclick = this.disableCam
+              icon.className = 'material-icons cam-pos'
+              icon.textContent = 'videocam'
               document.querySelector('#user-video-container').prepend(focused_video)
+              document.querySelector('#user-video-container').appendChild(icon)
+
             }
             else{
               document.querySelector('#peers-list-videos').appendChild(focused_video)
@@ -232,7 +238,6 @@ class Room extends React.PureComponent {
     let focused_container = document.querySelector('#focused-video-container')
     let peers_container = document.querySelector('#peers-list-videos')
     let focused_video = focused_container.children[0]
-    console.log(focused_video)
     if(focused_video){
       focused_container.replaceChild(video, focused_video)
       peers_container.appendChild(focused_video)
@@ -274,10 +279,8 @@ class Room extends React.PureComponent {
           <aside id='peers-video-container'>
             <div id="user-video-container">
               {/* main video will be pasted here */}
-              <span onClick={this.disableCam} className="material-icons cam-pos">
-                videocam
-              </span>
             </div>
+
             <div id="peers-list-videos">
               {/*peer videos will be pasted here*/}
             </div>
