@@ -38,9 +38,51 @@
     border: none;
     margin: 0 4px;
     transition: .2s ease-in-out;
+    border-radius: 5px;
 }
 .buttons-list button:hover{
     cursor: pointer;
     background-color: turquoise;
     transform: scale(1.1);
+}
+
+msg{
+    display: flex;
+    flex-flow: column;
+    margin: 60px auto 0;
+    color: black;
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 50%;
+    position: relative;
+}
+msg .close{
+    font-size: 0.6rem;
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    cursor: pointer;
+    background: red;
+    padding: 1px 0px 0px 1px;
+    border-radius: 50%;
+    height: 0.8rem;
+    width: 0.8rem;
+    transition: .1s ease-in-out;
+}
+msg .close:hover{
+    background: darkred;
+    color: white;
+}
+
+msg h4{
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: red;
+}
+msg p{
+    margin-bottom: 5px;
+}
+msg p:last-child{
+    margin-top: 20px;
 }
