@@ -1,0 +1,46 @@
+#modal{
+    background: white;
+    width: 50%;
+    border-radius: 5px;
+    margin: 10px auto;
+    padding: 10px;
+    box-shadow: 3px 10px 20px 0 #00000036;
+}
+.landing-instructions{
+    margin: 5% auto;
+}
+.landing-instructions p{
+    font-size: 1rem;
+}
+.landing-instructions h1{
+    margin-bottom: 10px;
+}
+.form-container{
+    padding: 20px;
+}
+.form-container form input{
+    text-align: center;
+    padding: 5px 10px;
+    border: none;
+    border-bottom: 1px solid grey;
+    border-radius: 0;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    font-family: monospace;
+}
+.buttons-list{
+    display: flex;
+    justify-content: center;
+}
+.buttons-list button{
+    padding: 4px 10px;
+    border: none;
+    margin: 0 4px;
+    transition: .2s ease-in-out;
+}
+.buttons-list button:hover{
+    cursor: pointer;
+    background-color: turquoise;
+    transform: scale(1.1);
+}
