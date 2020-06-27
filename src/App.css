@@ -68,7 +68,7 @@ input:focus{
 #app-container{
   display: flex;
   justify-content: space-evenly;
-  height: 95%;
+  height: 90%;
 }
 
 #user-video-container{
@@ -186,10 +186,20 @@ input:focus{
 
 
 
-#title{
-  background: #333333;
-  color: white;
-  padding: 8px 0;
+#nav{
+  color: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+#title, #buttons{
+  padding-left: 10px;
+  padding-right: 10px;
+}
+#title span {
+  font-size: 1.3rem;
+  color: #b793f4
 }
 
 .category{

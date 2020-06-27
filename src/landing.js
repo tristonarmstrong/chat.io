@@ -27,9 +27,15 @@ class Landing extends React.Component{
         return(
             <div id='modal'>
                 <div className="landing-instructions">
-                    <h1>Looks like you're trying to join or create a room?</h1>
+                    <h1>
+                        <span>JOIN </span> 
+                        or 
+                        <span> CREATE </span> 
+                        a room?
+                    </h1>
                     <p>Type the name of the room that you would like to join or create, and select "GO!"</p>
-                    <p>Or select "Random" to randomly generate a room name!</p>
+                    <p>OR</p>
+                    <p>Select "Random" to randomly generate a room name!</p>
                 </div>
                 <div className="form-container">
                     <form>

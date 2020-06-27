@@ -1,10 +1,11 @@
 #modal{
-    background: white;
+    background: rgba(45, 55, 72, 0.6);
     width: 50%;
-    border-radius: 5px;
+    border-radius: 10px;
     margin: 10px auto;
     padding: 10px;
-    box-shadow: 3px 10px 20px 0 #00000036;
+    box-shadow: 3px 10px 20px 0 rgba(0,0,0,.21);
+    color: white;
 }
 .landing-instructions{
     margin: 5% auto;
@@ -15,6 +16,9 @@
 .landing-instructions h1{
     margin-bottom: 10px;
 }
+.landing-instructions h1 span{
+    color: #b794f4;
+}
 .form-container{
     padding: 20px;
 }
@@ -22,12 +26,12 @@
     text-align: center;
     padding: 5px 10px;
     border: none;
-    border-bottom: 1px solid grey;
-    border-radius: 0;
+    border-radius: 10px;
     margin-bottom: 10px;
     font-size: 1rem;
-    font-weight: bold;
-    font-family: monospace;
+    font-weight: 700;
+    background: #1a212d;
+    color: white;
 }
 .buttons-list{
     display: flex;
@@ -42,7 +46,7 @@
 }
 .buttons-list button:hover{
     cursor: pointer;
-    background-color: turquoise;
+    background-color: #b793f4;
     transform: scale(1.1);
 }
 
@@ -50,8 +54,8 @@ msg{
     display: flex;
     flex-flow: column;
     margin: 60px auto 0;
-    color: black;
-    background: white;
+    color: white;
+    background: rgba(45, 55, 72, 0.6);
     padding: 10px;
     border-radius: 5px;
     max-width: 50%;
@@ -63,22 +67,23 @@ msg .close{
     right: 3px;
     top: 3px;
     cursor: pointer;
-    background: red;
+    background: #b791f4;
     padding: 1px 0px 0px 1px;
     border-radius: 50%;
     height: 0.8rem;
     width: 0.8rem;
     transition: .1s ease-in-out;
+    color: black;
 }
 msg .close:hover{
-    background: darkred;
-    color: white;
+    background: #9a7ace;
+    color: black;
 }
 
 msg h4{
     margin-bottom: 10px;
     font-size: 1rem;
-    color: red;
+    color: #b791f4;
 }
 msg p{
     margin-bottom: 5px;
