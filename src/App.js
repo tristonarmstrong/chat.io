@@ -18,6 +18,12 @@ class App extends React.PureComponent {
     }
   }
 
+  startOver=()=>{
+    this.props.history.push('/')
+    document.location.reload()
+  }
+
+
   goClick=(name)=>{
     this.props.history.push(`/${name}`)
     this.setState({path: `/${name}`})
@@ -32,7 +38,7 @@ class App extends React.PureComponent {
     return (
       <div className="App">
         <div id="nav">
-          <h1 id='title'>ChatApp 
+          <h1 onClick={this.startOver} id='title'>ChatApp 
             <span>_Join n Chat</span>
           </h1>
           <div>[ Buttons ]</div>

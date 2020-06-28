@@ -6,7 +6,7 @@ class Landing extends React.Component{
     state={
         name: ''
     }
-
+    
     handleChange=(e)=>{
         this.setState({name: e.target.value})
     }
@@ -24,6 +24,7 @@ class Landing extends React.Component{
         this.props.randomClick()
     }
     render(){
+        
         return(
             <div id='modal'>
                 <div className="landing-instructions">
