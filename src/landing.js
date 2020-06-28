@@ -1,5 +1,6 @@
 import React from 'react'
 import './landing.css'
+import FeedbackForm from './feedbackform.js'
 
 class Landing extends React.Component{
 
@@ -58,29 +59,7 @@ class Landing extends React.Component{
                 </div>
 
                 {/* form down below */}
-                <div className='modal'>
-                    <div className='landing-instructions'>
-                        <h1><span>FEEDBACK</span></h1>
-                        <p>Please tell me what I can do to improve the app!</p>
-                    </div>
-                    <form name='Feedback' method='POST' data-netlify='true' action="">
-                        <div className="form-group">
-                            <input name='name' type="text" className="form-control" placeholder="Name" />
-                        </div>
-                        <div className="form-group">
-                            <input name='email' type="email" className="form-control" placeholder="Email" />
-                        </div>
-                        <div className="form-group">
-                            <input name='subject' type="text" className="form-control" placeholder="Subject" />
-                        </div>
-                        <div className="form-group">
-                            <textarea name="message" id="message" cols="30" rows="7" className="form-control" placeholder="Message"></textarea>
-                        </div>
-                        <div className="form-group">
-                            <button type="submit" className="submit-button">Send Message</button>
-                        </div>
-                    </form>
-                </div>
+                <FeedbackForm/>
             </>
         )
     }

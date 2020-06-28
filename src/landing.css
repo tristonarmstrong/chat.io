@@ -111,4 +111,5 @@ msg p:last-child{
     width: 75%;
     font-family: 'Open Sans';
     font-size: .8rem;
+    resize: vertical;
 }
