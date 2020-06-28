@@ -1,4 +1,4 @@
-#modal{
+.modal{
     background: rgba(45, 55, 72, 0.6);
     width: 50%;
     border-radius: 10px;
@@ -37,14 +37,17 @@
     display: flex;
     justify-content: center;
 }
-.buttons-list button{
+.submit-button{
     padding: 4px 10px;
     border: none;
     margin: 0 4px;
     transition: .2s ease-in-out;
     border-radius: 5px;
+    font-family: 'Open Sans';
+    font-weight: bold;
+    color: #404040;
 }
-.buttons-list button:hover{
+.submit-button:hover{
     cursor: pointer;
     background-color: #b793f4;
     transform: scale(1.1);
@@ -90,4 +93,22 @@ msg p{
 }
 msg p:last-child{
     margin-top: 20px;
+}
+
+.form-group{
+    margin: 10px 0;
+}
+.form-control{
+    text-align: center;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    background: #1a212d;
+    color: white;
+    width: 75%;
+    font-family: 'Open Sans';
+    font-size: .8rem;
 }
