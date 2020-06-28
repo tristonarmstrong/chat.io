@@ -22,4 +22,9 @@ code {
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
+
+body { font-size: .8rem }
+
+p{
+  line-height: 1.4;
+}

@@ -39,7 +39,7 @@ class App extends React.PureComponent {
       <div className="App">
         <div id="nav">
           <h1 onClick={this.startOver} id='title'>ChatApp 
-            <span>_Join n Chat</span>
+            <span>_ Join n Chat</span>
           </h1>
           <div>[ Buttons ]</div>
         </div>
