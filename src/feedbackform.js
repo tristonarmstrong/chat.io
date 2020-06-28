@@ -21,7 +21,7 @@ class FeedbackForm extends React.Component{
         fetch("/", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: this.encode({ "form-name": "Feedback", ...this.state })
+            body: this.encode({ "form-name": "feedback", ...this.state })
         })
             .then(() => alert("Success!"))
             .catch(error => alert(error));
@@ -40,6 +40,7 @@ class FeedbackForm extends React.Component{
                     <p>Please tell me what I can do to improve the app!</p>
                 </div>
                 <form onSubmit={this.handleSubmit} data-netlify={true}>
+                    <input type="hidden" name="form-name" value="feedback" />
                     <div className="form-group">
                         <input name='name' type="text" className="form-control" placeholder="Name" value={name} onChange={this.handleChange} />
                     </div>
