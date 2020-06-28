@@ -7,7 +7,7 @@
 
 .msg_cont{
     background: #d4e3fb;
-    color: black;
+    color: rgb(34, 34, 34);
     position: fixed;
     top: -50px;
     font-size: 0.5rem;
@@ -17,4 +17,7 @@
     border-radius: 10px;
     box-shadow: 0 0 20px 7px #0000008a;
     animation: msg-bubble-down 5s ease-in-out;
+}
+.msg_cont h1{
+    text-align: left;
 }
