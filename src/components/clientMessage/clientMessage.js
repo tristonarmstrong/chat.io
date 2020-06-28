@@ -3,17 +3,11 @@ import './index.css'
 
 class ClientMessage extends React.Component {
 
-    // componentDidMount(){
-    //     setTimeout(() => {
-            
-    //     }, 5000);
-    // }
-
-
     render(){
         return(
             <div className="msg_cont">
-                <h1>{this.props.msg}</h1>
+                <h1>Message:</h1>
+                <h2>{this.props.msg}</h2>
             </div>
         )
     }
