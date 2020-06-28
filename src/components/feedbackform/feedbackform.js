@@ -1,13 +1,8 @@
 import React from 'react'
+import ClientMessage from '../clientMessage/clientMessage.js'
 
 class FeedbackForm extends React.Component{
-
-    state = {
-        name: '', 
-        email: '', 
-        message: '', 
-        subject: ''
-    }
+    state = {name: '',email: '',message: '',subject: ''}
 
     encode = (data) => {
         return Object.keys(data)
@@ -23,8 +18,18 @@ class FeedbackForm extends React.Component{
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: this.encode({ "form-name": "feedback", ...this.state })
         })
-            .then(() => alert("Success!"))
-            .catch(error => alert(error));
+            .then(() => {
+                this.setState({name:'',email:'',message:'',subject:'', response: true, response_msg: 'Your feedback is appreciated!'}, () =>{
+                    setTimeout(() => {
+                        this.setState({response: false})
+                    }, 5000);
+                })
+            })
+            .catch(error => this.setState({response: true, response_msg: error}), ()=>{
+                setTimeout(() => {
+                    this.setState({response: false})
+                }, 5000);
+            });
 
         e.preventDefault();
     };
@@ -33,8 +38,10 @@ class FeedbackForm extends React.Component{
 
     render(){
         const {name, email, message, subject} = this.state
+        ++this.childKey
         return (
             <div className='modal'>
+                {this.state.response && <ClientMessage key={this.childKeyÍ} msg={this.state.response_msg}/>}
                 <div className='landing-instructions'>
                     <h1><span>FEEDBACK</span></h1>
                     <p>Please tell me what I can do to improve the app!</p>

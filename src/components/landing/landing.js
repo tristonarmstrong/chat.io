@@ -1,6 +1,6 @@
 import React from 'react'
-import './landing.css'
-import FeedbackForm from './feedbackform.js'
+import './index.css'
+import FeedbackForm from '../feedbackform/feedbackform.js'
 
 class Landing extends React.Component{
 

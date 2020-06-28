@@ -1,0 +1,20 @@
+@keyframes msg-bubble-down{
+    0% {top: -50px}
+    10% {top: 10px}
+    90% {top: 10px}
+    100% {top: -50px}
+}
+
+.msg_cont{
+    background: #d4e3fb;
+    color: black;
+    position: fixed;
+    top: -50px;
+    font-size: 0.5rem;
+    left: 50%;
+    transform: translate(-50%, 0);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px 7px #0000008a;
+    animation: msg-bubble-down 5s ease-in-out;
+}
