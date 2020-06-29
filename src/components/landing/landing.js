@@ -45,6 +45,7 @@ class Landing extends React.Component{
                             <input
                                 id='room'
                                 name='room'
+                                className="form-control"
                                 placeholder="Name of room"
                                 value={this.state.name}
                                 onChange={this.handleChange}
