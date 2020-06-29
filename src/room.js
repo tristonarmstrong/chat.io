@@ -136,7 +136,6 @@ class Room extends React.PureComponent {
               document.querySelector('#peers-list-videos').appendChild(focused_video)
             }
           }
-          // document.querySelector('#peers-list-videos').appendChild(video)
           video.play()
         }
 
@@ -257,7 +256,7 @@ class Room extends React.PureComponent {
             <div id="msg-box">
               <form onSubmit={(e) => this.sendMessage(e)}>
                 <input placeholder="chat here..." value={this.state.my_msg} onChange={(e) => this.handleMsgChange(e)} />
-                <button>Send</button>
+                <button><span className='material-icons medium'>send</span></button>
               </form>
             </div>
           </aside>
@@ -266,7 +265,7 @@ class Room extends React.PureComponent {
             {/* Focused video goes here */}
             <video id='main' className="tiny-vid" muted controls={false}></video>
             <msg>
-              <div onClick={e=> e.target.parentElement.parentElement.removeChild(e.target.parentElement)} className='close'>x</div>
+              <div onClick={e=> console.log(e.target.parentElement.parentElement.parentElement.removeChild(e.target.parentElement.parentElement))} className='close'><span className='material-icons small'>cancel</span></div>
               <h4>DEVELOPER UPDATE!</h4>
               <p>I am pushing updates regularly.</p>
               <p>If the app is broken, please come back at a later time as I will 
@@ -283,6 +282,13 @@ class Room extends React.PureComponent {
 
             <div id="peers-list-videos">
               {/*peer videos will be pasted here*/}
+              <video className='tiny-vid'/>
+              <video className='tiny-vid'/>
+              <video className='tiny-vid'/>
+              <video className='tiny-vid'/>
+              <video className='tiny-vid'/>
+              <video className='tiny-vid'/>
+              <video className='tiny-vid'/>
             </div>
           </aside>
         </div>

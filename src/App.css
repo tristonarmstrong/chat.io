@@ -11,10 +11,10 @@ input:focus{
 }
 ::-webkit-scrollbar-thumb{
   border-radius: 10px;
-  background-color: rgb(182, 182, 182);
+  background-color: rgba(182, 182, 182, 0);
 }
 ::-webkit-scrollbar-thumb:hover{
-  background-color: rgb(158, 158, 158);
+  background-color: rgb(93, 113, 150);
 }
 
 .App-logo {
@@ -46,9 +46,8 @@ input:focus{
 
 .tiny-vid{
   width: 100%;
-  background-color: #00000061;
-  border-radius: 4px 0 0 4px;
-  margin-top: 10px;
+  background-color: rgba(45, 55, 72, 0.6);
+  border-radius: 10px;
 }
 .cam-pos{
   position: absolute;
@@ -73,7 +72,6 @@ input:focus{
 
 #user-video-container{
   position: relative;
-  margin-bottom: 20px;
 }
 
 
@@ -84,6 +82,12 @@ input:focus{
   flex: 1.5;
   padding-left: 10px;
   padding-right: 10px;
+  height: 100%;
+}
+#peers-list-videos{
+  height: 90%;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
 }
 
 
@@ -115,7 +119,7 @@ input:focus{
     color: #313131;
     background-color: #b790f4;
     font-size: .8rem;
-    padding: 10px;
+    padding: 0 10px;
     transition: background .2s ease-in-out;
     border-radius: 0 0 10px 0;
 }
@@ -154,12 +158,6 @@ input:focus{
 }
 
 
-
-
-
-#peers-video-container{
-  border-radius: 10px 0 0 10px;
-}
 #focused-video-container{
   flex: 6;
 }
@@ -178,7 +176,7 @@ input:focus{
   margin-right: auto;
   background-color: #e890f4;
   padding: 0px 2px;
-  border-radius: 0 5px 5px 5px;
+  border-radius: 0 10px 10px 10px;
   padding: 5px;
   box-shadow: 2px 2px 5px 0px #00000026;
   animation-name: msgBubble;
@@ -186,7 +184,7 @@ input:focus{
 }
 .me {
   text-align: right;
-  border-radius: 5px 0 5px 5px;
+  border-radius: 10px 0 10px 10px;
   background-color: #90a5f4;
   margin-left: auto;
   margin-right: 0;

@@ -22,17 +22,7 @@
 .form-container{
     padding: 20px;
 }
-.form-container form input{
-    text-align: center;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    font-size: 1rem;
-    font-weight: 700;
-    background: #1a212d;
-    color: white;
-}
+
 .buttons-list{
     display: flex;
     justify-content: center;
@@ -65,22 +55,24 @@ msg{
     position: relative;
 }
 msg .close{
-    font-size: 0.6rem;
-    position: absolute;
-    right: 3px;
-    top: 3px;
-    cursor: pointer;
-    background: #b791f4;
-    padding: 1px 0px 0px 1px;
-    border-radius: 50%;
-    height: 0.8rem;
-    width: 0.8rem;
-    transition: .1s ease-in-out;
-    color: black;
+        position: absolute;
+        right: 3px;
+        top: 3px;
+        cursor: pointer;
+        transition: .1s ease-in-out;
+        color: #fd6b6b;
 }
 msg .close:hover{
-    background: #9a7ace;
-    color: black;
+    color: #bd5050;
+}
+.small{
+    font-size: 1rem;
+}
+.medium{
+    font-size: 1.2rem;
+}
+.large{
+    font-size: 1.4rem;
 }
 
 msg h4{

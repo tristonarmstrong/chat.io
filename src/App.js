@@ -37,14 +37,16 @@ class App extends React.PureComponent {
   render() {
     return (
       <div className="App">
-        <div id="nav">
+        <nav id="nav">
           <h1 onClick={this.startOver} id='title'>ChatApp 
             <span>_ Join n Chat</span>
           </h1>
           <div>[ Buttons ]</div>
-        </div>
-        <Route exact path='/' render={(props) => <Landing {...props} goClick={this.goClick} randomClick={this.randomClick}/>}/>
-        {Boolean(this.state.path.length) && <Route path={`${this.state.path}`} component={Room}/> }
+        </nav>
+        <main>
+          <Route exact path='/' render={(props) => <Landing {...props} goClick={this.goClick} randomClick={this.randomClick}/>}/>
+          {Boolean(this.state.path.length) && <Route path={`${this.state.path}`} component={Room}/> }
+        </main>
       </div>
     );
   }
