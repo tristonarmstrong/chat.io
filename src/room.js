@@ -282,13 +282,6 @@ class Room extends React.PureComponent {
 
             <div id="peers-list-videos">
               {/*peer videos will be pasted here*/}
-              <video className='tiny-vid'/>
-              <video className='tiny-vid'/>
-              <video className='tiny-vid'/>
-              <video className='tiny-vid'/>
-              <video className='tiny-vid'/>
-              <video className='tiny-vid'/>
-              <video className='tiny-vid'/>
             </div>
           </aside>
         </div>
