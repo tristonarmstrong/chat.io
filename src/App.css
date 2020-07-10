@@ -152,6 +152,7 @@ input:focus{
   padding-right: 5px;
   background-color: #273143;
   border-radius: 10px 10px 0 0;
+  word-break: break-all;
 }
 #message-container > :first-child {
   margin-top: auto;
