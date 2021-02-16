@@ -267,10 +267,8 @@ class Room extends React.PureComponent {
             <msg>
               <div onClick={e=> console.log(e.target.parentElement.parentElement.parentElement.removeChild(e.target.parentElement.parentElement))} className='close'><span className='material-icons small'>cancel</span></div>
               <h4>DEVELOPER UPDATE!</h4>
-              <p>I am pushing updates regularly.</p>
-              <p>If the app is broken, please come back at a later time as I will 
-                be working diligently to get things back up and running!
-              </p>
+              <p>I am no longer pushing updates regularly.</p>
+              <p>If the app is broken, I apologize!</p>
               <p>Thank you - Triston</p>
             </msg>
           </div>
